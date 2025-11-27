@@ -130,3 +130,37 @@ Mailjet response: [Object: null prototype] {
     }
   ]
 }
+Error fetching dashboard stats: ConnectionError [SequelizeConnectionError]: getaddrinfo EAI_AGAIN mysql-143ad253-ahmedabdelmoatyy-159e.c.aivencloud.com
+    at ConnectionManager.connect (/home/abdelmoaty/Desktop/c-back-backup/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:102:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async ConnectionManager._connect (/home/abdelmoaty/Desktop/c-back-backup/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24) {
+  parent: Error: getaddrinfo EAI_AGAIN mysql-143ad253-ahmedabdelmoatyy-159e.c.aivencloud.com
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26) {
+    errno: -3001,
+    code: 'EAI_AGAIN',
+    syscall: 'getaddrinfo',
+    hostname: 'mysql-143ad253-ahmedabdelmoatyy-159e.c.aivencloud.com',
+    fatal: true
+  },
+  original: Error: getaddrinfo EAI_AGAIN mysql-143ad253-ahmedabdelmoatyy-159e.c.aivencloud.com
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26) {
+    errno: -3001,
+    code: 'EAI_AGAIN',
+    syscall: 'getaddrinfo',
+    hostname: 'mysql-143ad253-ahmedabdelmoatyy-159e.c.aivencloud.com',
+    fatal: true
+  }
+}
+Patient profile created: 42
+Welcome email sent successfully to: w@ww.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}

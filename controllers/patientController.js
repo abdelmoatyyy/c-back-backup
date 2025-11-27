@@ -113,7 +113,7 @@ exports.updateProfile = async (req, res) => {
         const { dateOfBirth, gender, bloodGroup, address } = req.body;
 
         // Check if profile exists
-        let patient = await Patient.findOne({ where: { user_id: userId } });
+        let patient = await Patient.findOne({ where: { userId } });
 
         if (patient) {
             // Update
@@ -125,7 +125,7 @@ exports.updateProfile = async (req, res) => {
         } else {
             // Create
             patient = await Patient.create({
-                user_id: userId,
+                userId,
                 dateOfBirth,
                 gender,
                 bloodGroup,
