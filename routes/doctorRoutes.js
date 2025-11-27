@@ -6,5 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 router.get('/', doctorController.getAllDoctors);
 router.post('/profile', authMiddleware, doctorController.updateProfile);
+router.get('/dashboard-stats', authMiddleware, doctorController.getDashboardStats);
+router.get('/appointments', authMiddleware, doctorController.getAppointments);
 
 module.exports = router;
