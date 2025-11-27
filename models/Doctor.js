@@ -8,10 +8,9 @@ const Doctor = sequelize.define('Doctor', {
         autoIncrement: true,
         field: 'doctor_id'
     },
-    userId: {
+    user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'user_id',
         references: {
             model: 'users',
             key: 'user_id'
@@ -34,11 +33,7 @@ const Doctor = sequelize.define('Doctor', {
         field: 'room_number'
     }
 }, {
-    timestamps: false, // Table doesn't have created_at/updated_at based on schema provided in prompt? 
-    // Wait, the prompt schema for doctors DOES NOT show created_at. 
-    // users has created_at. patients has nothing. doctors has nothing. 
-    // doctor_schedules has nothing. appointments has created_at. medical_records has record_date.
-    // So timestamps: false for Doctor.
+    timestamps: false,
     underscored: true,
     tableName: 'doctors'
 });

@@ -8,10 +8,9 @@ const Patient = sequelize.define('Patient', {
         autoIncrement: true,
         field: 'patient_id'
     },
-    userId: {
+    user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'user_id',
         references: {
             model: 'users',
             key: 'user_id'

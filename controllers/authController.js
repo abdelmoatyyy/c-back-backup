@@ -47,7 +47,7 @@ exports.register = async (req, res) => {
         // Create role-specific record
         if (role === 'doctor') {
             await Doctor.create({
-                userId: newUser.userId,
+                user_id: newUser.userId,
                 specialization: 'General Practice', // Default specialization
                 consultationFee: 0, // Default fee, can be updated later
                 bio: null,
@@ -55,7 +55,7 @@ exports.register = async (req, res) => {
             });
         } else if (role === 'patient') {
             await Patient.create({
-                userId: newUser.userId,
+                user_id: newUser.userId,
                 dateOfBirth: null,
                 gender: null,
                 address: null,

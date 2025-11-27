@@ -116,14 +116,14 @@ exports.updateProfile = async (req, res) => {
         let patient = await Patient.findOne({ where: { user_id: userId } });
 
         if (patient) {
-            // Update
-            patient.dateOfBirth = dateOfBirth;
-            patient.gender = gender;
-            patient.bloodGroup = bloodGroup;
-            patient.address = address;
+            // Update existing patient record
+            if (dateOfBirth) patient.dateOfBirth = dateOfBirth;
+            if (gender) patient.gender = gender;
+            if (bloodGroup !== undefined) patient.bloodGroup = bloodGroup;
+            if (address !== undefined) patient.address = address;
             await patient.save();
         } else {
-            // Create
+            // Create new patient record
             patient = await Patient.create({
                 user_id: userId,
                 dateOfBirth,
