@@ -1,4 +1,4 @@
-const { Patient, User } = require('../models');
+const { Patient, User, Appointment, Doctor } = require('../models');
 
 /**
  * @swagger
@@ -144,6 +144,113 @@ exports.updateProfile = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Error updating profile",
+            error: error.message
+        });
+    }
+};
+
+/**
+ * @swagger
+ * /api/patients/appointments:
+ *   get:
+ *     summary: Get patient's appointments
+ *     tags: [Patients]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [scheduled, completed, cancelled]
+ *         description: Filter appointments by status
+ *     responses:
+ *       200:
+ *         description: Patient appointments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       appointmentId:
+ *                         type: integer
+ *                       appointmentDate:
+ *                         type: string
+ *                         format: date
+ *                       appointmentTime:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *                       Doctor:
+ *                         type: object
+ *                         properties:
+ *                           specialization:
+ *                             type: string
+ *                           User:
+ *                             type: object
+ *                             properties:
+ *                               fullName:
+ *                                 type: string
+ *       404:
+ *         description: Patient profile not found
+ *       500:
+ *         description: Server error
+ */
+exports.getAppointments = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { status } = req.query;
+
+        // Find the patient first
+        const patient = await Patient.findOne({
+            where: { user_id: userId }
+        });
+
+        if (!patient) {
+            return res.status(404).json({
+                success: false,
+                message: "Patient profile not found"
+            });
+        }
+
+        // Build where clause for appointments
+        const whereClause = { patientId: patient.patientId };
+        if (status) {
+            whereClause.status = status;
+        }
+
+        // Get appointments with doctor information
+        const appointments = await Appointment.findAll({
+            where: whereClause,
+            include: [{
+                model: Doctor,
+                include: [{
+                    model: User,
+                    attributes: ['fullName', 'email']
+                }],
+                attributes: ['specialization', 'consultationFee', 'roomNumber', 'bio']
+            }],
+            order: [['appointmentDate', 'DESC'], ['appointmentTime', 'DESC']]
+        });
+
+        res.status(200).json({
+            success: true,
+            data: appointments,
+            count: appointments.length
+        });
+
+    } catch (error) {
+        console.error("Error fetching appointments:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching appointments",
             error: error.message
         });
     }
