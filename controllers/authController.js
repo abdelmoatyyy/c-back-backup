@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { User, Doctor, Patient } = require('../models');
 const mailjet = require('../config/email');
 
 /**
@@ -43,6 +43,21 @@ exports.register = async (req, res) => {
             passwordHash: hashedPassword,
             role
         });
+
+        // Create associated profile based on role with default values
+        try {
+            if (role === 'doctor') {
+                const doctorProfile = await Doctor.create({
+                    userId: newUser.userId,
+                    specialization: 'General Practitioner', // Default placeholder
+                    consultationFee: 0.00 // Default placeholder
+                });
+                console.log('Doctor profile created:', doctorProfile.doctorId);
+            }
+        } catch (profileError) {
+            console.error('Error creating profile:', profileError.message);
+            // Log but continue - user is created, profile can be fixed later
+        }
 
         // Send Response immediately - don't wait for anything else
         res.status(201).json({

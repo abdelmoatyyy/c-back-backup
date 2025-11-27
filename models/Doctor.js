@@ -8,6 +8,11 @@ const Doctor = sequelize.define('Doctor', {
         autoIncrement: true,
         field: 'doctor_id'
     },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'user_id'
+    },
     specialization: {
         type: DataTypes.STRING(100),
         allowNull: false

@@ -8,6 +8,11 @@ const Patient = sequelize.define('Patient', {
         autoIncrement: true,
         field: 'patient_id'
     },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'user_id'
+    },
     dateOfBirth: {
         type: DataTypes.DATEONLY,
         allowNull: false,

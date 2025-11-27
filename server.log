@@ -1,17 +1,132 @@
-[dotenv@17.2.3] injecting env (7) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
-[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (10) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
 🚀 Server running on port 8000
 ✅ Database connected successfully to Aiven!
-Creating appointment with: { doctorId: 15, patientId: 16, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 16, patientId: 17, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 17, patientId: 18, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 18, patientId: 19, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 19, patientId: 20, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 20, patientId: 21, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 21, patientId: 22, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 22, patientId: 23, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 23, patientId: 24, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 24, patientId: 25, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 25, patientId: 26, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 26, patientId: 27, date: '2025-12-30', time: '14:00:00' }
-Creating appointment with: { doctorId: 27, patientId: 31, date: '2025-12-30', time: '14:00:00' }
+Doctor profile created: 46
+Welcome email sent successfully to: testdoc_1764228468374@clinic.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
+Doctor profile created: 47
+Welcome email sent successfully to: f@f.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
+Error updating doctor profile: ConnectionError [SequelizeConnectionError]: connect ETIMEDOUT
+    at ConnectionManager.connect (/home/abdelmoaty/Desktop/c-back-backup/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:102:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async ConnectionManager._connect (/home/abdelmoaty/Desktop/c-back-backup/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24) {
+  parent: Error: connect ETIMEDOUT
+      at Connection._handleTimeoutError (/home/abdelmoaty/Desktop/c-back-backup/node_modules/mysql2/lib/base/connection.js:200:17)
+      at listOnTimeout (node:internal/timers:581:17)
+      at process.processTimers (node:internal/timers:519:7) {
+    errorno: 'ETIMEDOUT',
+    code: 'ETIMEDOUT',
+    syscall: 'connect',
+    fatal: true
+  },
+  original: Error: connect ETIMEDOUT
+      at Connection._handleTimeoutError (/home/abdelmoaty/Desktop/c-back-backup/node_modules/mysql2/lib/base/connection.js:200:17)
+      at listOnTimeout (node:internal/timers:581:17)
+      at process.processTimers (node:internal/timers:519:7) {
+    errorno: 'ETIMEDOUT',
+    code: 'ETIMEDOUT',
+    syscall: 'connect',
+    fatal: true
+  }
+}
+Patient profile created: 38
+Welcome email sent successfully to: aa@w.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
+Patient profile created: 39
+Welcome email sent successfully to: all@all.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
+Patient profile created: 40
+Welcome email sent successfully to: da@aa.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
+Patient profile created: 41
+Welcome email sent successfully to: ss@ss.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
+Doctor profile created: 48
+Welcome email sent successfully to: z@zzz.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
+Creating appointment with: { doctorId: 48, patientId: 36, date: '2025-11-28', time: '15:00:00' }
+Appointment confirmation email sent to: abdelmoatyy@gmail.com
+Mailjet response: [Object: null prototype] {
+  Messages: [
+    [Object: null prototype] {
+      Status: 'success',
+      CustomID: '',
+      To: [Array],
+      Cc: [],
+      Bcc: []
+    }
+  ]
+}
