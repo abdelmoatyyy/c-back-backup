@@ -73,37 +73,44 @@ exports.bookAppointment = async (req, res) => {
         });
         const doctorName = doctor && doctor.User ? doctor.User.fullName : 'Dr. Unknown';
 
-        // Send Confirmation Email via Mailjet
-        try {
-            const request = mailjet
-                .post("send", { 'version': 'v3.1' })
-                .request({
-                    "Messages": [
-                        {
-                            "From": {
-                                "Email": process.env.MAIL_SENDER, // Sender must be verified in Mailjet
-                                "Name": "Clinic Admin"
-                            },
-                            "To": [
-                                {
-                                    "Email": foundPatient.User.email,
-                                    "Name": foundPatient.User.fullName
-                                }
-                            ],
-                            "Subject": "Appointment Confirmed",
-                            "TextPart": `Dear ${foundPatient.User.fullName},\n\nYour appointment has been confirmed with ${doctorName} on ${date} at ${time}.`,
-                            "HTMLPart": `<h3>Dear ${foundPatient.User.fullName},</h3><p>Your appointment has been confirmed with <strong>${doctorName}</strong> on <strong>${date}</strong> at <strong>${time}</strong>.</p>`
-                        }
-                    ]
-                });
+        // Send Confirmation Email via Mailjet (non-blocking)
+        const sendEmailAsync = async () => {
+            try {
+                const request = mailjet
+                    .post("send", { 'version': 'v3.1' })
+                    .request({
+                        "Messages": [
+                            {
+                                "From": {
+                                    "Email": process.env.MAIL_SENDER, // Sender must be verified in Mailjet
+                                    "Name": "Clinic Admin"
+                                },
+                                "To": [
+                                    {
+                                        "Email": foundPatient.User.email,
+                                        "Name": foundPatient.User.fullName
+                                    }
+                                ],
+                                "Subject": "Appointment Confirmed",
+                                "TextPart": `Dear ${foundPatient.User.fullName},\n\nYour appointment has been confirmed with ${doctorName} on ${date} at ${time}.`,
+                                "HTMLPart": `<h3>Dear ${foundPatient.User.fullName},</h3><p>Your appointment has been confirmed with <strong>${doctorName}</strong> on <strong>${date}</strong> at <strong>${time}</strong>.</p>`
+                            }
+                        ]
+                    });
 
-            const result = await request;
-            console.log('Appointment confirmation email sent to:', foundPatient.User.email);
-            console.log('Mailjet response:', result.body);
-        } catch (emailError) {
-            console.error('Failed to send appointment email:', emailError.statusCode, emailError.message);
-        }
+                const result = await request;
+                console.log('Appointment confirmation email sent to:', foundPatient.User.email);
+                console.log('Mailjet response:', result.body);
+            } catch (emailError) {
+                console.error('Failed to send appointment email:', emailError.statusCode, emailError.message);
+                // Email failure is logged but doesn't affect appointment response
+            }
+        };
 
+        // Fire and forget - don't wait for email to send
+        sendEmailAsync();
+
+        // Send Response immediately
         res.status(201).json(newAppt);
 
     } catch (error) {

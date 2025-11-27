@@ -44,39 +44,44 @@ exports.register = async (req, res) => {
             role
         });
 
-        // Send Welcome Email via Mailjet
-        try {
-            const request = mailjet
-                .post("send", { 'version': 'v3.1' })
-                .request({
-                    "Messages": [
-                        {
-                            "From": {
-                                "Email": process.env.MAIL_SENDER, // Sender must be verified in Mailjet
-                                "Name": "Clinic Admin"
-                            },
-                            "To": [
-                                {
-                                    "Email": email,
-                                    "Name": fullName
-                                }
-                            ],
-                            "Subject": "Welcome to the Clinic!",
-                            "TextPart": `Dear ${fullName},\n\nWelcome to our clinic system. Your account has been created successfully.`,
-                            "HTMLPart": `<h3>Dear ${fullName},</h3><p>Welcome to our clinic system. Your account has been created successfully.</p>`
-                        }
-                    ]
-                });
+        // Send Welcome Email via Mailjet (non-blocking)
+        const sendEmailAsync = async () => {
+            try {
+                const request = mailjet
+                    .post("send", { 'version': 'v3.1' })
+                    .request({
+                        "Messages": [
+                            {
+                                "From": {
+                                    "Email": process.env.MAIL_SENDER, // Sender must be verified in Mailjet
+                                    "Name": "Clinic Admin"
+                                },
+                                "To": [
+                                    {
+                                        "Email": email,
+                                        "Name": fullName
+                                    }
+                                ],
+                                "Subject": "Welcome to the Clinic!",
+                                "TextPart": `Dear ${fullName},\n\nWelcome to our clinic system. Your account has been created successfully.`,
+                                "HTMLPart": `<h3>Dear ${fullName},</h3><p>Welcome to our clinic system. Your account has been created successfully.</p>`
+                            }
+                        ]
+                    });
 
-            const result = await request;
-            console.log('Welcome email sent successfully to:', email);
-            console.log('Mailjet response:', result.body);
-        } catch (emailError) {
-            console.error('Failed to send welcome email:', emailError.statusCode, emailError.message);
-            // We don't block registration if email fails, but we log it.
-        }
+                const result = await request;
+                console.log('Welcome email sent successfully to:', email);
+                console.log('Mailjet response:', result.body);
+            } catch (emailError) {
+                console.error('Failed to send welcome email:', emailError.statusCode, emailError.message);
+                // Email failure is logged but doesn't affect registration response
+            }
+        };
 
-        // Send Response
+        // Fire and forget - don't wait for email to send
+        sendEmailAsync();
+
+        // Send Response immediately
         res.status(201).json({
             success: true,
             message: "User created!"
