@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { User, Doctor, Patient } = require('../models');
+const User = require('../models/User');
 const mailjet = require('../config/email');
 
 /**
@@ -43,26 +43,6 @@ exports.register = async (req, res) => {
             passwordHash: hashedPassword,
             role
         });
-
-        // Create role-specific record
-        if (role === 'doctor') {
-            await Doctor.create({
-                user_id: newUser.userId,
-                specialization: 'General Practice', // Default specialization
-                consultationFee: 0, // Default fee, can be updated later
-                bio: null,
-                roomNumber: null
-            });
-        } else if (role === 'patient') {
-            await Patient.create({
-                user_id: newUser.userId,
-                dateOfBirth: null,
-                gender: null,
-                address: null,
-                phoneNumber: null,
-                emergencyContact: null
-            });
-        }
 
         // Send Response immediately - don't wait for anything else
         res.status(201).json({

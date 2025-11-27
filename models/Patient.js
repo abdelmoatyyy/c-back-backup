@@ -8,22 +8,14 @@ const Patient = sequelize.define('Patient', {
         autoIncrement: true,
         field: 'patient_id'
     },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'user_id'
-        }
-    },
     dateOfBirth: {
         type: DataTypes.DATEONLY,
-        allowNull: true,
+        allowNull: false,
         field: 'date_of_birth'
     },
     gender: {
         type: DataTypes.ENUM('Male', 'Female', 'Other'),
-        allowNull: true
+        allowNull: false
     },
     bloodGroup: {
         type: DataTypes.STRING(5),
@@ -31,14 +23,6 @@ const Patient = sequelize.define('Patient', {
     },
     address: {
         type: DataTypes.TEXT
-    },
-    phoneNumber: {
-        type: DataTypes.STRING(20),
-        field: 'phone_number'
-    },
-    emergencyContact: {
-        type: DataTypes.STRING(100),
-        field: 'emergency_contact'
     }
 }, {
     timestamps: false,
