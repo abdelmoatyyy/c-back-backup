@@ -44,8 +44,15 @@ exports.register = async (req, res) => {
             role
         });
 
-        // Send Welcome Email via Mailjet (non-blocking)
-        const sendEmailAsync = async () => {
+        // Send Response immediately - don't wait for anything else
+        res.status(201).json({
+            success: true,
+            message: "User created!"
+        });
+
+        // Send Welcome Email via Mailjet (completely async, no blocking)
+        // Use setImmediate to ensure this runs after the response is sent
+        setImmediate(async () => {
             try {
                 const request = mailjet
                     .post("send", { 'version': 'v3.1' })
@@ -76,15 +83,6 @@ exports.register = async (req, res) => {
                 console.error('Failed to send welcome email:', emailError.statusCode, emailError.message);
                 // Email failure is logged but doesn't affect registration response
             }
-        };
-
-        // Fire and forget - don't wait for email to send
-        sendEmailAsync();
-
-        // Send Response immediately
-        res.status(201).json({
-            success: true,
-            message: "User created!"
         });
 
     } catch (error) {

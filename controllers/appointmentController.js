@@ -67,15 +67,19 @@ exports.bookAppointment = async (req, res) => {
             appointmentTime: time
         });
 
-        // Fetch Doctor details to get name
-        const doctor = await Doctor.findByPk(doctorId, {
-            include: [{ model: User }]
-        });
-        const doctorName = doctor && doctor.User ? doctor.User.fullName : 'Dr. Unknown';
+        // Send Response immediately
+        res.status(201).json(newAppt);
 
-        // Send Confirmation Email via Mailjet (non-blocking)
-        const sendEmailAsync = async () => {
+        // Send Confirmation Email via Mailjet (completely async, no blocking)
+        // Use setImmediate to ensure this runs after the response is sent
+        setImmediate(async () => {
             try {
+                // Fetch Doctor details to get name
+                const doctor = await Doctor.findByPk(doctorId, {
+                    include: [{ model: User }]
+                });
+                const doctorName = doctor && doctor.User ? doctor.User.fullName : 'Dr. Unknown';
+
                 const request = mailjet
                     .post("send", { 'version': 'v3.1' })
                     .request({
@@ -105,13 +109,7 @@ exports.bookAppointment = async (req, res) => {
                 console.error('Failed to send appointment email:', emailError.statusCode, emailError.message);
                 // Email failure is logged but doesn't affect appointment response
             }
-        };
-
-        // Fire and forget - don't wait for email to send
-        sendEmailAsync();
-
-        // Send Response immediately
-        res.status(201).json(newAppt);
+        });
 
     } catch (error) {
         // CATCH THE DUPLICATE ERROR
