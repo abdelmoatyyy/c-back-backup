@@ -1,4 +1,5 @@
 const { Appointment, Patient, User, Doctor } = require('../models');
+const { Op } = require('sequelize');
 const mailjet = require('../config/email');
 
 /**
@@ -118,6 +119,87 @@ exports.bookAppointment = async (req, res) => {
         }
         res.status(500).json({
             message: "Error booking appointment",
+            error: error.message
+        });
+    }
+};
+
+/**
+ * @swagger
+ * /api/appointments/availability:
+ *   get:
+ *     summary: Check appointment availability for a doctor on a specific date
+ *     tags: [Appointments]
+ *     parameters:
+ *       - in: query
+ *         name: doctorId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the doctor
+ *       - in: query
+ *         name: date
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Date to check availability (YYYY-MM-DD)
+ *     responses:
+ *       200:
+ *         description: List of booked time slots
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: Array of booked time slots (e.g., ["09:00:00", "10:30:00"])
+ *       400:
+ *         description: Missing required parameters
+ *       500:
+ *         description: Server error
+ */
+exports.checkAvailability = async (req, res) => {
+    try {
+        const { doctorId, date } = req.query;
+
+        if (!doctorId || !date) {
+            return res.status(400).json({
+                success: false,
+                message: "Doctor ID and date are required"
+            });
+        }
+
+        // Get all appointments for the doctor on the specified date
+        const appointments = await Appointment.findAll({
+            where: {
+                doctorId: parseInt(doctorId),
+                appointmentDate: date,
+                status: {
+                    [Op.ne]: 'cancelled' // Exclude cancelled appointments
+                }
+            },
+            attributes: ['appointmentTime']
+        });
+
+        // Extract the time slots that are already booked
+        const bookedTimeSlots = appointments.map(appointment => appointment.appointmentTime);
+
+        res.status(200).json({
+            success: true,
+            data: bookedTimeSlots
+        });
+
+    } catch (error) {
+        console.error("Error checking availability:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error checking appointment availability",
             error: error.message
         });
     }
