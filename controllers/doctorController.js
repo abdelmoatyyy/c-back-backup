@@ -107,22 +107,26 @@ exports.updateProfile = async (req, res) => {
         const userId = req.user.id;
         const { specialization, bio, consultationFee, roomNumber } = req.body;
 
-        const doctor = await Doctor.findOne({ where: { user_id: userId } });
+        let doctor = await Doctor.findOne({ where: { user_id: userId } });
 
         if (!doctor) {
-            return res.status(404).json({
-                success: false,
-                message: "Doctor profile not found"
+            // Create doctor record if it doesn't exist (for existing users)
+            doctor = await Doctor.create({
+                userId: userId,
+                specialization: specialization || 'General Practice',
+                consultationFee: consultationFee || 0,
+                bio: bio || null,
+                roomNumber: roomNumber || null
             });
+        } else {
+            // Update existing doctor record
+            if (specialization) doctor.specialization = specialization;
+            if (bio !== undefined) doctor.bio = bio;
+            if (consultationFee !== undefined) doctor.consultationFee = consultationFee;
+            if (roomNumber !== undefined) doctor.roomNumber = roomNumber;
+
+            await doctor.save();
         }
-
-        // Update fields if provided
-        if (specialization) doctor.specialization = specialization;
-        if (bio) doctor.bio = bio;
-        if (consultationFee) doctor.consultationFee = consultationFee;
-        if (roomNumber) doctor.roomNumber = roomNumber;
-
-        await doctor.save();
 
         res.status(200).json({
             success: true,
