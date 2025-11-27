@@ -72,3 +72,79 @@ exports.getProfile = async (req, res) => {
         });
     }
 };
+
+/**
+ * @swagger
+ * /api/patients/profile:
+ *   post:
+ *     summary: Create or update patient profile
+ *     tags: [Patients]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - dateOfBirth
+ *               - gender
+ *             properties:
+ *               dateOfBirth:
+ *                 type: string
+ *                 format: date
+ *               gender:
+ *                 type: string
+ *                 enum: [Male, Female, Other]
+ *               bloodGroup:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       500:
+ *         description: Server error
+ */
+exports.updateProfile = async (req, res) => {
+    try {
+        const userId = req.user.id; // From authMiddleware
+        const { dateOfBirth, gender, bloodGroup, address } = req.body;
+
+        // Check if profile exists
+        let patient = await Patient.findOne({ where: { user_id: userId } });
+
+        if (patient) {
+            // Update
+            patient.dateOfBirth = dateOfBirth;
+            patient.gender = gender;
+            patient.bloodGroup = bloodGroup;
+            patient.address = address;
+            await patient.save();
+        } else {
+            // Create
+            patient = await Patient.create({
+                user_id: userId,
+                dateOfBirth,
+                gender,
+                bloodGroup,
+                address
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Profile updated successfully",
+            data: patient
+        });
+
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error updating profile",
+            error: error.message
+        });
+    }
+};
