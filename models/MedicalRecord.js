@@ -8,6 +8,21 @@ const MedicalRecord = sequelize.define('MedicalRecord', {
         autoIncrement: true,
         field: 'record_id'
     },
+    patientId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'patient_id'
+    },
+    doctorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'doctor_id'
+    },
+    appointmentId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'appointment_id'
+    },
     diagnosis: {
         type: DataTypes.TEXT,
         allowNull: false

@@ -20,6 +20,7 @@ app.use('/api/doctors', require('./routes/doctorRoutes'));
 app.use('/api/appointments', require('./routes/appointmentRoutes'));
 app.use('/api/patients', require('./routes/patientRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/medical-records', require('./routes/medicalRecordRoutes'));
 
 // Test DB Connection
 sequelize.authenticate()

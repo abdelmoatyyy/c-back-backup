@@ -8,6 +8,11 @@ const Schedule = sequelize.define('DoctorSchedule', {
         autoIncrement: true,
         field: 'schedule_id'
     },
+    doctorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'doctor_id'
+    },
     dayOfWeek: {
         type: DataTypes.ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
         allowNull: false,
