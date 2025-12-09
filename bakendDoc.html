@@ -1,0 +1,2821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Management System - Backend API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            
+            color: black;
+            padding: 40px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .content {
+            background: white;
+            margin: 30px auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .badge.get { background: #61affe; color: white; }
+        .badge.post { background: #49cc90; color: white; }
+        .badge.put { background: #fca130; color: white; }
+        .badge.delete { background: #f93e3e; color: white; }
+        .badge.protected { background: #ff6b6b; color: white; }
+
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            background: #2d3748;
+            color: #68d391;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+
+        .info-box {
+            background: #e6f7ff;
+            border-left: 4px solid #1890ff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff7e6;
+            border-left: 4px solid #ffa940;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: #f6ffed;
+            border-left: 4px solid #52c41a;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .erd-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 30px auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🏥 Clinic Management System</h1>
+            <p>Backend API Documentation</p>
+        </div>
+    </header>
+
+ 
+
+    <div class="container">
+        <div class="content">
+            <!-- Overview Section -->
+            <section id="overview">
+                <h2>📋 Overview</h2>
+                <p>
+                    The <strong>Clinic Management System</strong> is a comprehensive backend API built with <strong>Node.js</strong> and <strong>Express.js</strong>
+                    that manages all aspects of a modern healthcare clinic. The system facilitates seamless interactions between patients, doctors, and administrators
+                    while maintaining secure medical records and appointment scheduling.
+                </p>
+
+                <h3>Key Features</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>👥 User Management</h4>
+                        <ul>
+                            <li>Multi-role authentication (Admin, Doctor, Patient)</li>
+                            <li>Secure JWT-based authorization</li>
+                            <li>Email verification and password recovery</li>
+                            <li>Profile management for all user types</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>👨‍⚕️ Doctor Module</h4>
+                        <ul>
+                            <li>Comprehensive doctor profiles with specializations</li>
+                            <li>Flexible schedule management</li>
+                            <li>Patient appointment tracking</li>
+                            <li>Medical record access and updates</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>🤒 Patient Module</h4>
+                        <ul>
+                            <li>Patient registration and profile management</li>
+                            <li>Browse and search doctors by specialty</li>
+                            <li>Book, reschedule, and cancel appointments</li>
+                            <li>View personal medical history</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>📅 Appointment System</h4>
+                        <ul>
+                            <li>Real-time availability checking</li>
+                            <li>Status tracking (pending, confirmed, completed, cancelled)</li>
+                            <li>Conflict prevention and validation</li>
+                            <li>Automated notifications</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>📁 Medical Records</h4>
+                        <ul>
+                            <li>Secure medical history storage</li>
+                            <li>Diagnosis and treatment tracking</li>
+                            <li>Prescription management</li>
+                            <li>Doctor-patient shared access</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>⚙️ Admin Panel</h4>
+                        <ul>
+                            <li>Complete system oversight</li>
+                            <li>User management (create, update, delete)</li>
+                            <li>Doctor approval and verification</li>
+                            <li>System-wide statistics and reports</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Technology Stack</h3>
+                <div class="info-box">
+                    <strong>Backend Framework:</strong> Node.js with Express.js<br>
+                    <strong>Database:</strong> MySQL with Sequelize ORM<br>
+                    <strong>Authentication:</strong> JWT (JSON Web Tokens) + bcrypt<br>
+                    <strong>Email Service:</strong> Mailjet<br>
+                    <strong>Security:</strong> CORS, Helmet, Input validation<br>
+                    <strong>API Style:</strong> RESTful architecture
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture">
+                <h2>🏗️ System Architecture</h2>
+                
+                <h3>Architecture Overview</h3>
+                <p>
+                    The system follows a <strong>layered MVC (Model-View-Controller)</strong> architecture pattern, separating concerns into distinct layers:
+                </p>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>🔹 Routes Layer</h4>
+                        <p>Defines API endpoints and maps HTTP requests to appropriate controllers. Applies middleware for authentication and validation.</p>
+                        <ul>
+                            <li>authRoutes.js - Authentication endpoints</li>
+                            <li>doctorRoutes.js - Doctor-specific operations</li>
+                            <li>patientRoutes.js - Patient operations</li>
+                            <li>appointmentRoutes.js - Appointment management</li>
+                            <li>adminRoutes.js - Administrative functions</li>
+                            <li>medicalRecordRoutes.js - Medical records</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>🔹 Controllers Layer</h4>
+                        <p>Contains business logic and handles request processing, validation, and response formatting.</p>
+                        <ul>
+                            <li>authController.js - User authentication logic</li>
+                            <li>doctorController.js - Doctor operations</li>
+                            <li>patientController.js - Patient operations</li>
+                            <li>appointmentController.js - Appointment logic</li>
+                            <li>adminController.js - Admin functions</li>
+                            <li>medicalRecordController.js - Medical records</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>🔹 Models Layer</h4>
+                        <p>Defines database schemas and manages data relationships using Sequelize ORM.</p>
+                        <ul>
+                            <li>User.js - Base user authentication</li>
+                            <li>Doctor.js - Doctor profiles</li>
+                            <li>Patient.js - Patient information</li>
+                            <li>Appointment.js - Appointment details</li>
+                            <li>Schedule.js - Doctor schedules</li>
+                            <li>MedicalRecord.js - Medical histories</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>🔹 Middleware Layer</h4>
+                        <p>Handles cross-cutting concerns like authentication, authorization, and error handling.</p>
+                        <ul>
+                            <li>authMiddleware.js - JWT verification</li>
+                            <li>Role-based access control</li>
+                            <li>Request validation</li>
+                            <li>Error handling</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Request Flow</h3>
+                <div class="code-block">
+Client Request
+    ↓
+Express Server (server.js)
+    ↓
+Routes Layer (maps URL to controller)
+    ↓
+Middleware (authentication, validation)
+    ↓
+Controller (business logic)
+    ↓
+Model Layer (database operations)
+    ↓
+Database (MySQL)
+    ↓
+Response back through layers
+    ↓
+JSON Response to Client
+                </div>
+
+                <h3>Database Schema - Entity Relationship Diagram</h3>
+                <p>The following ERD illustrates the relationships between all entities in the system:</p>
+                
+               
+
+                <!-- ERD Image Placeholder -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <img src="/home/abdelmoaty/Downloads/ERD.jpg" alt="Entity Relationship Diagram" class="erd-image">
+                    <p style="margin-top: 10px; color: #666; font-style: italic;">
+                        Entity Relationship Diagram - Clinic Management System Database Schema
+                    </p>
+                </div>
+
+                <h3>Key Relationships</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Relationship</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>User ↔ Doctor</td>
+                                <td>One-to-One</td>
+                                <td>Each user with role='doctor' has one corresponding doctor profile</td>
+                            </tr>
+                            <tr>
+                                <td>User ↔ Patient</td>
+                                <td>One-to-One</td>
+                                <td>Each user with role='patient' has one corresponding patient profile</td>
+                            </tr>
+                            <tr>
+                                <td>Doctor ↔ Schedule</td>
+                                <td>One-to-Many</td>
+                                <td>A doctor can have multiple schedule entries for different days</td>
+                            </tr>
+                            <tr>
+                                <td>Doctor ↔ Appointment</td>
+                                <td>One-to-Many</td>
+                                <td>A doctor can have multiple appointments with different patients</td>
+                            </tr>
+                            <tr>
+                                <td>Patient ↔ Appointment</td>
+                                <td>One-to-Many</td>
+                                <td>A patient can have multiple appointments with different doctors</td>
+                            </tr>
+                            <tr>
+                                <td>Patient ↔ MedicalRecord</td>
+                                <td>One-to-Many</td>
+                                <td>A patient can have multiple medical records over time</td>
+                            </tr>
+                            <tr>
+                                <td>Doctor ↔ MedicalRecord</td>
+                                <td>One-to-Many</td>
+                                <td>A doctor can create multiple medical records for different patients</td>
+                            </tr>
+                            <tr>
+                                <td>Appointment ↔ MedicalRecord</td>
+                                <td>One-to-One</td>
+                                <td>Each completed appointment can have one associated medical record</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Data Flow Examples</h3>
+                
+                <h4>📌 Patient Booking Flow</h4>
+                <div class="code-block">
+1. Patient browses available doctors (GET /api/patients/doctors)
+2. Patient views specific doctor's schedule (GET /api/patients/doctors/:id/schedule)
+3. Patient books appointment (POST /api/appointments)
+   - System validates doctor availability
+   - System checks for scheduling conflicts
+   - Appointment created with status='pending'
+4. Doctor reviews and confirms appointment (PUT /api/appointments/:id)
+5. Both parties receive confirmation
+                </div>
+
+                <h4>📌 Medical Record Creation Flow</h4>
+                <div class="code-block">
+1. Doctor completes appointment with patient
+2. Doctor updates appointment status to 'completed'
+3. Doctor creates medical record (POST /api/medical-records)
+   - Links to patient, doctor, and appointment
+   - Stores diagnosis, treatment, prescriptions
+4. Record is accessible to both doctor and patient
+5. Patient can view their medical history
+                </div>
+            </section>
+
+            <!-- Authentication APIs Section -->
+            <section id="api-auth">
+                <h2>🔑 Authentication APIs</h2>
+                
+                <h3>Base URL</h3>
+                <div class="endpoint-path">/api/auth</div>
+                
+                <p>These endpoints handle user registration, login, and account verification. All authentication endpoints are public (no JWT required).</p>
+
+                <!-- Register Endpoint -->
+                <h3>POST /register</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/auth/register</span>
+                    </div>
+                    <p><strong>Description:</strong> Register a new user account with role-based profile creation.</p>
+                    
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "fullName": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "SecurePass123!",
+  "role": "patient"  // Options: "admin", "doctor", "patient"
+}
+                    </div>
+
+                    <h4>Request Fields</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>fullName</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>User's full name</td>
+                                </tr>
+                                <tr>
+                                    <td>email</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>Valid email address (must be unique)</td>
+                                </tr>
+                                <tr>
+                                    <td>password</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>Password (will be hashed with bcrypt)</td>
+                                </tr>
+                                <tr>
+                                    <td>role</td>
+                                    <td>String (Enum)</td>
+                                    <td>Yes</td>
+                                    <td>User role: 'admin', 'doctor', or 'patient'</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (201 Created)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "User created!"
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 500 - Server Error (e.g., email already exists)
+{
+  "success": false,
+  "message": "Error registering user",
+  "error": "Validation error: email must be unique"
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Business Logic:</strong><br>
+                        1. Password is hashed using bcrypt (10 salt rounds)<br>
+                        2. User record created in database<br>
+                        3. If role='doctor', a default Doctor profile is created with placeholder values<br>
+                        4. Response sent immediately to client<br>
+                        5. Welcome email sent asynchronously via Mailjet (non-blocking)
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Note:</strong> If email sending fails, registration still succeeds. Email failures are logged but don't affect the response.
+                    </div>
+                </div>
+
+                <!-- Login Endpoint -->
+                <h3>POST /login</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/auth/login</span>
+                    </div>
+                    <p><strong>Description:</strong> Authenticate user and receive JWT token for accessing protected routes.</p>
+                    
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "email": "john.doe@example.com",
+  "password": "SecurePass123!"
+}
+                    </div>
+
+                    <h4>Request Fields</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>email</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>Registered email address</td>
+                                </tr>
+                                <tr>
+                                    <td>password</td>
+                                    <td>String</td>
+                                    <td>Yes</td>
+                                    <td>User's password</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6InBhdGllbnQiLCJpYXQiOjE3MzM3ODg4MDAsImV4cCI6MTczMzg3NTIwMH0.xyz...",
+  "user": {
+    "id": 1,
+    "fullName": "John Doe",
+    "email": "john.doe@example.com",
+    "role": "patient"
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 404 - User Not Found
+{
+  "success": false,
+  "message": "User not found"
+}
+
+// 401 - Invalid Credentials
+{
+  "success": false,
+  "message": "Invalid credentials"
+}
+
+// 500 - Server Error
+{
+  "success": false,
+  "message": "Error logging in",
+  "error": "Database connection failed"
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Business Logic:</strong><br>
+                        1. System checks if email exists in database<br>
+                        2. Password is compared with stored hash using bcrypt<br>
+                        3. If valid, JWT token is generated with user ID and role<br>
+                        4. Token expires after 24 hours (1 day)<br>
+                        5. User information returned along with token
+                    </div>
+
+                    <div class="success-box">
+                        <strong>✅ Using the Token:</strong> After successful login, include the token in all subsequent requests:
+                        <div class="code-block">
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Authentication Flow Diagram</h3>
+                <div class="code-block">
+┌─────────────────────────────────────────────────────────────┐
+│                    REGISTRATION FLOW                        │
+└─────────────────────────────────────────────────────────────┘
+
+Client                 Server                    Database
+  │                      │                          │
+  ├──POST /register──────>│                          │
+  │  {email, password}    │                          │
+  │                      │──Hash Password────>       │
+  │                      │                          │
+  │                      │──Create User────────────>│
+  │                      │<─User Created────────────┤
+  │                      │                          │
+  │                      │──Create Profile─────────>│
+  │                      │  (if doctor/patient)     │
+  │                      │<─Profile Created─────────┤
+  │                      │                          │
+  │<─201 Success─────────┤                          │
+  │  {message}           │                          │
+  │                      │                          │
+  │                      │──Send Welcome Email───>  │
+  │                      │  (async, non-blocking)   │
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                       LOGIN FLOW                            │
+└─────────────────────────────────────────────────────────────┘
+
+Client                 Server                    Database
+  │                      │                          │
+  ├──POST /login─────────>│                          │
+  │  {email, password}    │                          │
+  │                      │──Find User──────────────>│
+  │                      │<─User Data───────────────┤
+  │                      │                          │
+  │                      │──Verify Password───>     │
+  │                      │  (bcrypt.compare)        │
+  │                      │                          │
+  │                      │──Generate JWT────>       │
+  │                      │  {id, role, exp}         │
+  │                      │                          │
+  │<─200 Success─────────┤                          │
+  │  {token, user}       │                          │
+  │                      │                          │
+  │──Future Requests──────>│                          │
+  │  Authorization:       │                          │
+  │  Bearer <token>       │                          │
+                </div>
+
+                <h3>Password Security Details</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Registration Password Handling</h4>
+                        <div class="code-block" style="font-size: 0.85em;">
+const hashedPassword = 
+  await bcrypt.hash(password, 10);
+
+// Stored in database:
+// passwordHash: "$2a$10$xyz..."
+                        </div>
+                        <p><strong>Salt Rounds:</strong> 10<br>
+                        <strong>Algorithm:</strong> bcrypt<br>
+                        <strong>Storage:</strong> One-way hash (irreversible)</p>
+                    </div>
+
+                    <div class="card">
+                        <h4>Login Password Verification</h4>
+                        <div class="code-block" style="font-size: 0.85em;">
+const isMatch = await bcrypt.compare(
+  password,
+  user.passwordHash
+);
+
+// Returns: true or false
+                        </div>
+                        <p><strong>Method:</strong> bcrypt.compare()<br>
+                        <strong>Process:</strong> Compares plain text with hash<br>
+                        <strong>Timing:</strong> Constant-time comparison</p>
+                    </div>
+                </div>
+
+                <h3>Example: Complete Registration & Login Workflow</h3>
+                <div class="code-block">
+// Step 1: Register a new patient
+fetch('http://localhost:3000/api/auth/register', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    fullName: 'Jane Smith',
+    email: 'jane.smith@example.com',
+    password: 'SecurePassword123!',
+    role: 'patient'
+  })
+})
+.then(res => res.json())
+.then(data => console.log(data));
+// Response: { success: true, message: "User created!" }
+
+// Step 2: Login with credentials
+fetch('http://localhost:3000/api/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'jane.smith@example.com',
+    password: 'SecurePassword123!'
+  })
+})
+.then(res => res.json())
+.then(data => {
+  const token = data.token;
+  localStorage.setItem('token', token); // Save token
+  console.log('Logged in:', data.user);
+});
+
+// Step 3: Use token for authenticated requests
+const token = localStorage.getItem('token');
+fetch('http://localhost:3000/api/patients/profile', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => res.json())
+.then(profile => console.log('My profile:', profile));
+                </div>
+
+                <h3>Common Authentication Errors</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Error</th>
+                                <th>Status Code</th>
+                                <th>Cause</th>
+                                <th>Solution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>User not found</td>
+                                <td>404</td>
+                                <td>Email not registered</td>
+                                <td>Check email or register first</td>
+                            </tr>
+                            <tr>
+                                <td>Invalid credentials</td>
+                                <td>401</td>
+                                <td>Wrong password</td>
+                                <td>Verify password is correct</td>
+                            </tr>
+                            <tr>
+                                <td>Email must be unique</td>
+                                <td>500</td>
+                                <td>Email already registered</td>
+                                <td>Use different email or login</td>
+                            </tr>
+                            <tr>
+                                <td>Token expired</td>
+                                <td>401</td>
+                                <td>JWT token older than 24 hours</td>
+                                <td>Login again to get new token</td>
+                            </tr>
+                            <tr>
+                                <td>Invalid token</td>
+                                <td>401</td>
+                                <td>Malformed or tampered token</td>
+                                <td>Login again to get valid token</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Doctor APIs Section -->
+            <section id="api-doctors">
+                <h2>👨‍⚕️ Doctor APIs</h2>
+                
+                <h3>Base URL</h3>
+                <div class="endpoint-path">/api/doctors</div>
+                
+                <p>These endpoints handle doctor profile management, scheduling, appointments, and dashboard statistics. Most endpoints require doctor authentication.</p>
+
+                <!-- Get All Doctors -->
+                <h3>GET /</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/doctors</span>
+                    </div>
+                    <p><strong>Description:</strong> Get list of all doctors (Public endpoint - no authentication required).</p>
+                    
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": [
+    {
+      "doctorId": 1,
+      "specialization": "Cardiology",
+      "bio": "Experienced cardiologist with 10+ years...",
+      "consultationFee": 150.00,
+      "roomNumber": "A-101",
+      "User": {
+        "fullName": "Dr. Sarah Johnson",
+        "email": "sarah.johnson@clinic.com",
+        "phoneNumber": "+1234567890"
+      }
+    }
+  ]
+}
+                    </div>
+                </div>
+
+                <!-- Get Doctor Profile -->
+                <h3>GET /profile</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/doctors/profile</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get current authenticated doctor's profile information.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+                    
+                    <h4>Headers</h4>
+                    <div class="code-block">
+Authorization: Bearer &lt;jwt_token&gt;
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "doctorId": 1,
+    "userId": 5,
+    "specialization": "Cardiology",
+    "bio": "Experienced cardiologist specializing in heart disease prevention",
+    "consultationFee": 150.00,
+    "roomNumber": "A-101",
+    "User": {
+      "userId": 5,
+      "fullName": "Dr. Sarah Johnson",
+      "email": "sarah.johnson@clinic.com",
+      "phoneNumber": "+1234567890",
+      "role": "doctor"
+    }
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 403 - Not a doctor
+{
+  "success": false,
+  "message": "Access denied. Only doctors can access their profile."
+}
+
+// 404 - Profile not found
+{
+  "success": false,
+  "message": "Doctor profile not found"
+}
+                    </div>
+                </div>
+
+                <!-- Update Doctor Profile -->
+                <h3>POST /profile</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/doctors/profile</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Update doctor's profile information.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+                    
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "specialization": "Pediatric Cardiology",
+  "bio": "Updated bio with new specialization focus...",
+  "consultationFee": 175.00,
+  "roomNumber": "A-102"
+}
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>specialization</td><td>String</td><td>No</td><td>Medical specialization</td></tr>
+                                <tr><td>bio</td><td>String</td><td>No</td><td>Professional biography</td></tr>
+                                <tr><td>consultationFee</td><td>Number</td><td>No</td><td>Consultation fee amount</td></tr>
+                                <tr><td>roomNumber</td><td>String</td><td>No</td><td>Office/room number</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Profile updated successfully",
+  "data": {
+    "doctorId": 1,
+    "specialization": "Pediatric Cardiology",
+    "bio": "Updated bio...",
+    "consultationFee": 175.00,
+    "roomNumber": "A-102"
+  }
+}
+                    </div>
+                </div>
+
+                <!-- Get Dashboard Stats -->
+                <h3>GET /dashboard/stats</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/doctors/dashboard/stats</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get dashboard statistics including appointments and earnings.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "todayAppointments": 5,
+    "weeklyAppointments": 23,
+    "monthlyEarnings": 4500.00,
+    "totalPatients": 87
+  }
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Calculations:</strong><br>
+                        • <strong>todayAppointments:</strong> Count of appointments scheduled for today<br>
+                        • <strong>weeklyAppointments:</strong> Count from start of current week to now<br>
+                        • <strong>monthlyEarnings:</strong> Completed appointments × consultation fee for current month<br>
+                        • <strong>totalPatients:</strong> Count of unique patients who booked appointments
+                    </div>
+                </div>
+
+                <!-- Get Doctor Appointments -->
+                <h3>GET /appointments</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/doctors/appointments</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get doctor's appointments with filtering options.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Query Parameters</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>status</td><td>String</td><td>No</td><td>Filter by status: scheduled, completed, cancelled, no_show</td></tr>
+                                <tr><td>date</td><td>Date (YYYY-MM-DD)</td><td>No</td><td>Filter by specific date</td></tr>
+                                <tr><td>upcoming</td><td>Boolean</td><td>No</td><td>If false, shows all appointments. Default: true (upcoming only)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Example Requests</h4>
+                    <div class="code-block">
+// Get all upcoming appointments (default)
+GET /api/doctors/appointments
+
+// Get today's appointments
+GET /api/doctors/appointments?date=2025-12-09
+
+// Get completed appointments
+GET /api/doctors/appointments?status=completed
+
+// Get all appointments (past and future)
+GET /api/doctors/appointments?upcoming=false
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": [
+    {
+      "appointmentId": 1,
+      "patientId": 3,
+      "doctorId": 1,
+      "appointmentDate": "2025-12-10",
+      "appointmentTime": "10:00:00",
+      "status": "scheduled",
+      "reason": "Regular checkup",
+      "notes": "Patient reports chest pain",
+      "Patient": {
+        "patientId": 3,
+        "User": {
+          "fullName": "John Doe",
+          "email": "john.doe@example.com",
+          "phoneNumber": "+1234567890"
+        }
+      }
+    }
+  ]
+}
+                    </div>
+                </div>
+
+                <!-- Update Appointment Status -->
+                <h3>PUT /appointments/:appointmentId/status</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge put">PUT</span>
+                        <span class="endpoint-path">/api/doctors/appointments/:appointmentId/status</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Update the status of an appointment.</p>
+                    <p><strong>Required Role:</strong> Doctor (can only update their own appointments)</p>
+
+                    <h4>URL Parameters</h4>
+                    <div class="code-block">
+appointmentId: integer (required)
+                    </div>
+
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "status": "completed"  // Options: scheduled, completed, cancelled, no_show
+}
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Appointment status updated successfully",
+  "data": {
+    "appointmentId": 1,
+    "status": "completed",
+    "appointmentDate": "2025-12-09",
+    "appointmentTime": "10:00:00"
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 400 - Invalid status
+{
+  "success": false,
+  "message": "Invalid status. Must be one of: scheduled, completed, cancelled, no_show"
+}
+
+// 404 - Appointment not found
+{
+  "success": false,
+  "message": "Appointment not found"
+}
+                    </div>
+                </div>
+
+                <!-- Schedule Management -->
+                <h3>Schedule Management</h3>
+                <p>Doctors can manage their weekly availability schedule.</p>
+
+                <!-- Get Schedule -->
+                <h3>GET /schedule</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/doctors/schedule</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get doctor's weekly schedule, sorted by day of week.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": [
+    {
+      "scheduleId": 1,
+      "doctorId": 1,
+      "dayOfWeek": "Monday",
+      "startTime": "09:00:00",
+      "endTime": "17:00:00",
+      "isAvailable": true
+    },
+    {
+      "scheduleId": 2,
+      "doctorId": 1,
+      "dayOfWeek": "Tuesday",
+      "startTime": "09:00:00",
+      "endTime": "13:00:00",
+      "isAvailable": true
+    }
+  ]
+}
+                    </div>
+                </div>
+
+                <!-- Add Schedule -->
+                <h3>POST /schedule</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/doctors/schedule</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Add a new schedule slot for a specific day.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "dayOfWeek": "Wednesday",
+  "startTime": "09:00:00",
+  "endTime": "17:00:00",
+  "isAvailable": true
+}
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>dayOfWeek</td><td>Enum</td><td>Yes</td><td>Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday</td></tr>
+                                <tr><td>startTime</td><td>Time (HH:MM:SS)</td><td>Yes</td><td>Schedule start time</td></tr>
+                                <tr><td>endTime</td><td>Time (HH:MM:SS)</td><td>Yes</td><td>Schedule end time (must be after startTime)</td></tr>
+                                <tr><td>isAvailable</td><td>Boolean</td><td>No</td><td>Availability toggle (default: true)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (201 Created)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Schedule added successfully",
+  "data": {
+    "scheduleId": 3,
+    "doctorId": 1,
+    "dayOfWeek": "Wednesday",
+    "startTime": "09:00:00",
+    "endTime": "17:00:00",
+    "isAvailable": true
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 400 - Invalid time range
+{
+  "success": false,
+  "message": "End time must be after start time"
+}
+
+// 400 - Overlapping schedule
+{
+  "success": false,
+  "message": "Schedule overlaps with existing schedule"
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Validation Rules:</strong><br>
+                        • endTime must be after startTime<br>
+                        • Cannot create overlapping schedules for the same day<br>
+                        • System checks for time conflicts before creation
+                    </div>
+                </div>
+
+                <!-- Update Schedule -->
+                <h3>PUT /schedule/:scheduleId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge put">PUT</span>
+                        <span class="endpoint-path">/api/doctors/schedule/:scheduleId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Update an existing schedule slot.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Request Body (All fields optional)</h4>
+                    <div class="code-block">
+{
+  "dayOfWeek": "Thursday",
+  "startTime": "10:00:00",
+  "endTime": "18:00:00",
+  "isAvailable": false
+}
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Schedule updated successfully",
+  "data": {
+    "scheduleId": 3,
+    "dayOfWeek": "Thursday",
+    "startTime": "10:00:00",
+    "endTime": "18:00:00",
+    "isAvailable": false
+  }
+}
+                    </div>
+                </div>
+
+                <!-- Delete Schedule -->
+                <h3>DELETE /schedule/:scheduleId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge delete">DELETE</span>
+                        <span class="endpoint-path">/api/doctors/schedule/:scheduleId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Delete a schedule slot.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Schedule deleted successfully"
+}
+                    </div>
+                </div>
+
+                <h3>Complete Doctor Workflow Example</h3>
+                <div class="code-block">
+// 1. Doctor logs in
+const loginResponse = await fetch('/api/auth/login', {
+  method: 'POST',
+  body: JSON.stringify({ email: 'doctor@clinic.com', password: 'pass' })
+});
+const { token } = await loginResponse.json();
+
+// 2. Get doctor profile
+const profile = await fetch('/api/doctors/profile', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+
+// 3. Add schedule for Monday
+await fetch('/api/doctors/schedule', {
+  method: 'POST',
+  headers: { 
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    dayOfWeek: 'Monday',
+    startTime: '09:00:00',
+    endTime: '17:00:00'
+  })
+});
+
+// 4. Get today's appointments
+const appointments = await fetch('/api/doctors/appointments?date=2025-12-09', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+
+// 5. Mark appointment as completed
+await fetch('/api/doctors/appointments/1/status', {
+  method: 'PUT',
+  headers: { 
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ status: 'completed' })
+});
+
+// 6. Check dashboard stats
+const stats = await fetch('/api/doctors/dashboard/stats', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+                </div>
+            </section>
+
+            <!-- Patient APIs Section -->
+            <section id="api-patients">
+                <h2>🤒 Patient APIs</h2>
+                
+                <h3>Base URL</h3>
+                <div class="endpoint-path">/api/patients</div>
+                
+                <p>These endpoints handle patient profile management, appointment viewing, and cancellation. All endpoints require patient authentication.</p>
+
+                <!-- Get Patient Profile -->
+                <h3>GET /profile</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/patients/profile</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get current authenticated patient's profile information.</p>
+                    <p><strong>Required Role:</strong> Patient</p>
+                    
+                    <h4>Headers</h4>
+                    <div class="code-block">
+Authorization: Bearer &lt;jwt_token&gt;
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "patientId": 3,
+    "userId": 10,
+    "dateOfBirth": "1990-05-15",
+    "gender": "Male",
+    "bloodGroup": "O+",
+    "address": "123 Main Street, City, State",
+    "User": {
+      "fullName": "John Doe",
+      "email": "john.doe@example.com",
+      "phoneNumber": "+1234567890"
+    }
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 404 - Profile not found
+{
+  "success": false,
+  "message": "Patient profile not found"
+}
+                    </div>
+                </div>
+
+                <!-- Update Patient Profile -->
+                <h3>POST /profile</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/patients/profile</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Create or update patient's profile information.</p>
+                    <p><strong>Required Role:</strong> Patient</p>
+                    
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "dateOfBirth": "1990-05-15",
+  "gender": "Male",
+  "bloodGroup": "O+",
+  "address": "123 Main Street, City, State"
+}
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>dateOfBirth</td><td>Date (YYYY-MM-DD)</td><td>Yes</td><td>Patient's date of birth</td></tr>
+                                <tr><td>gender</td><td>Enum</td><td>Yes</td><td>Values: Male, Female, Other</td></tr>
+                                <tr><td>bloodGroup</td><td>String</td><td>No</td><td>Blood type (e.g., O+, A-, AB+)</td></tr>
+                                <tr><td>address</td><td>String</td><td>No</td><td>Residential address</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Profile updated successfully",
+  "data": {
+    "patientId": 3,
+    "userId": 10,
+    "dateOfBirth": "1990-05-15",
+    "gender": "Male",
+    "bloodGroup": "O+",
+    "address": "123 Main Street, City, State"
+  }
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Logic:</strong> If profile exists, it updates the existing record. If no profile exists, it creates a new one.
+                    </div>
+                </div>
+
+                <!-- Get Patient Appointments -->
+                <h3>GET /appointments</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/patients/appointments</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get all appointments for the authenticated patient with optional status filter.</p>
+                    <p><strong>Required Role:</strong> Patient</p>
+
+                    <h4>Query Parameters</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>status</td><td>String</td><td>No</td><td>Filter by status: scheduled, completed, cancelled</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Example Requests</h4>
+                    <div class="code-block">
+// Get all appointments
+GET /api/patients/appointments
+
+// Get only scheduled appointments
+GET /api/patients/appointments?status=scheduled
+
+// Get completed appointments
+GET /api/patients/appointments?status=completed
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": [
+    {
+      "appointmentId": 5,
+      "patientId": 3,
+      "doctorId": 1,
+      "appointmentDate": "2025-12-15",
+      "appointmentTime": "10:00:00",
+      "status": "scheduled",
+      "reason": "Regular checkup",
+      "notes": null,
+      "Doctor": {
+        "specialization": "Cardiology",
+        "consultationFee": 150.00,
+        "roomNumber": "A-101",
+        "bio": "Experienced cardiologist...",
+        "User": {
+          "fullName": "Dr. Sarah Johnson",
+          "email": "sarah.johnson@clinic.com"
+        }
+      }
+    }
+  ],
+  "count": 1
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Sorting:</strong> Appointments are ordered by date and time in descending order (most recent first).
+                    </div>
+                </div>
+
+                <!-- Cancel Appointment -->
+                <h3>PUT /appointments/:appointmentId/cancel</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge put">PUT</span>
+                        <span class="endpoint-path">/api/patients/appointments/:appointmentId/cancel</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Cancel a scheduled appointment. Patient can only cancel their own appointments.</p>
+                    <p><strong>Required Role:</strong> Patient</p>
+
+                    <h4>URL Parameters</h4>
+                    <div class="code-block">
+appointmentId: integer (required)
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Appointment cancelled successfully",
+  "data": {
+    "appointmentId": 5,
+    "patientId": 3,
+    "doctorId": 1,
+    "appointmentDate": "2025-12-15",
+    "appointmentTime": "10:00:00",
+    "status": "cancelled",
+    "Doctor": {
+      "User": {
+        "fullName": "Dr. Sarah Johnson",
+        "email": "sarah.johnson@clinic.com"
+      }
+    }
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 404 - Appointment not found or not owned by patient
+{
+  "success": false,
+  "message": "Appointment not found"
+}
+
+// 400 - Already cancelled
+{
+  "success": false,
+  "message": "Appointment is already cancelled"
+}
+
+// 400 - Cannot cancel completed
+{
+  "success": false,
+  "message": "Cannot cancel a completed appointment"
+}
+
+// 404 - Patient profile not found
+{
+  "success": false,
+  "message": "Patient profile not found"
+}
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Cancellation Rules:</strong><br>
+                        • Can only cancel appointments with status='scheduled'<br>
+                        • Cannot cancel already cancelled appointments<br>
+                        • Cannot cancel completed appointments<br>
+                        • Can only cancel own appointments
+                    </div>
+                </div>
+
+                <h3>Complete Patient Workflow Example</h3>
+                <div class="code-block">
+// 1. Patient logs in
+const loginResponse = await fetch('/api/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'patient@example.com',
+    password: 'SecurePass123!'
+  })
+});
+const { token } = await loginResponse.json();
+
+// 2. Get patient profile
+const profileResponse = await fetch('/api/patients/profile', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+const profile = await profileResponse.json();
+
+// 3. Update profile with additional info
+await fetch('/api/patients/profile', {
+  method: 'POST',
+  headers: { 
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    dateOfBirth: '1990-05-15',
+    gender: 'Male',
+    bloodGroup: 'O+',
+    address: '123 Main Street, City'
+  })
+});
+
+// 4. View all appointments
+const appointmentsResponse = await fetch('/api/patients/appointments', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+const appointments = await appointmentsResponse.json();
+
+// 5. View only scheduled appointments
+const scheduledResponse = await fetch(
+  '/api/patients/appointments?status=scheduled',
+  { headers: { 'Authorization': `Bearer ${token}` } }
+);
+
+// 6. Cancel an appointment
+const appointmentId = 5;
+await fetch(`/api/patients/appointments/${appointmentId}/cancel`, {
+  method: 'PUT',
+  headers: { 
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+});
+                </div>
+
+                <h3>Patient Use Cases</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Initial Profile Setup</h4>
+                        <ol>
+                            <li>Patient registers account</li>
+                            <li>Patient logs in</li>
+                            <li>Patient completes profile with date of birth, gender, blood group</li>
+                            <li>Profile is now ready for booking appointments</li>
+                        </ol>
+                    </div>
+
+                    <div class="card">
+                        <h4>Managing Appointments</h4>
+                        <ol>
+                            <li>View all appointments (past and future)</li>
+                            <li>Filter by status (scheduled, completed, cancelled)</li>
+                            <li>See doctor details for each appointment</li>
+                            <li>Cancel upcoming appointments if needed</li>
+                        </ol>
+                    </div>
+
+                    <div class="card">
+                        <h4>View Doctor Information</h4>
+                        <p>When retrieving appointments, patient automatically gets:</p>
+                        <ul>
+                            <li>Doctor's name and email</li>
+                            <li>Specialization</li>
+                            <li>Consultation fee</li>
+                            <li>Room number</li>
+                            <li>Doctor's bio</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>Appointment Tracking</h4>
+                        <p>Patient can track appointment lifecycle:</p>
+                        <ul>
+                            <li><strong>scheduled:</strong> Appointment booked and confirmed</li>
+                            <li><strong>completed:</strong> Appointment finished</li>
+                            <li><strong>cancelled:</strong> Appointment was cancelled</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Appointment APIs Section -->
+            <section id="api-appointments">
+                <h2>📅 Appointment APIs</h2>
+                
+                <h3>Base URL</h3>
+                <div class="endpoint-path">/api/appointments</div>
+                
+                <p>These endpoints handle appointment booking, availability checking, and doctor schedule viewing. Booking requires authentication while availability and schedule are public.</p>
+
+                <!-- Book Appointment -->
+                <h3>POST /book</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/appointments/book</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Book a new appointment with a doctor. Validates availability and prevents conflicts.</p>
+                    <p><strong>Required Role:</strong> Patient (must have completed profile)</p>
+                    
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "doctorId": 1,
+  "date": "2025-12-15",
+  "time": "10:00:00",
+  "reasonForVisit": "Regular checkup and blood pressure monitoring"
+}
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>doctorId</td><td>Integer</td><td>Yes</td><td>ID of the doctor</td></tr>
+                                <tr><td>date</td><td>Date (YYYY-MM-DD)</td><td>Yes</td><td>Appointment date (must be future date)</td></tr>
+                                <tr><td>time</td><td>Time (HH:MM:SS)</td><td>Yes</td><td>Appointment time (must be within doctor's schedule)</td></tr>
+                                <tr><td>reasonForVisit</td><td>String</td><td>No</td><td>Reason for appointment (default: "General Consultation")</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (201 Created)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Appointment booked successfully",
+  "data": {
+    "appointmentId": 15,
+    "doctorId": 1,
+    "patientId": 3,
+    "appointmentDate": "2025-12-15",
+    "appointmentTime": "10:00:00",
+    "reasonForVisit": "Regular checkup and blood pressure monitoring",
+    "status": "scheduled"
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 400 - Cannot book in the past
+{
+  "success": false,
+  "message": "Cannot book appointments in the past"
+}
+
+// 400 - Doctor not available on this day
+{
+  "success": false,
+  "message": "Doctor is not available on Sundays"
+}
+
+// 400 - Time outside doctor's schedule
+{
+  "success": false,
+  "message": "Doctor is only available from 09:00 to 17:00 on Mondays"
+}
+
+// 409 - Slot already booked with this doctor
+{
+  "success": false,
+  "message": "This time slot is already booked"
+}
+
+// 409 - Patient has conflicting appointment
+{
+  "success": false,
+  "message": "You already have an appointment at 10:00:00 on 2025-12-15 with Dr. Smith"
+}
+
+// 404 - Patient profile not found
+{
+  "success": false,
+  "message": "Patient profile not found for this user"
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Validation Logic:</strong><br>
+                        1. <strong>Date Validation:</strong> Date must not be in the past<br>
+                        2. <strong>Day Check:</strong> Verifies doctor has schedule for the requested day of week<br>
+                        3. <strong>Time Check:</strong> Ensures time falls within doctor's working hours for that day<br>
+                        4. <strong>Slot Availability:</strong> Checks if time slot is not already booked<br>
+                        5. <strong>Patient Conflict:</strong> Prevents double-booking for the patient<br>
+                        6. <strong>Profile Check:</strong> Ensures patient profile exists<br>
+                        7. <strong>Confirmation Email:</strong> Sent asynchronously after booking
+                    </div>
+
+                    <div class="success-box">
+                        <strong>✅ Post-Booking:</strong> After successful booking, a confirmation email is automatically sent to the patient with appointment details.
+                    </div>
+                </div>
+
+                <!-- Check Availability -->
+                <h3>GET /availability</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/appointments/availability</span>
+                    </div>
+                    <p><strong>Description:</strong> Get available time slots for a specific doctor on a specific date (Public endpoint).</p>
+                    
+                    <h4>Query Parameters</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>doctorId</td><td>Integer</td><td>Yes</td><td>ID of the doctor</td></tr>
+                                <tr><td>date</td><td>Date (YYYY-MM-DD)</td><td>Yes</td><td>Date to check availability</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Example Request</h4>
+                    <div class="code-block">
+GET /api/appointments/availability?doctorId=1&date=2025-12-15
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "availableSlots": [
+      "09:00:00",
+      "09:30:00",
+      "10:00:00",
+      "10:30:00",
+      "11:00:00",
+      "13:00:00",
+      "13:30:00",
+      "14:00:00",
+      "14:30:00",
+      "15:00:00",
+      "15:30:00",
+      "16:00:00",
+      "16:30:00"
+    ],
+    "bookedSlots": [
+      "11:30:00",
+      "12:00:00",
+      "12:30:00"
+    ],
+    "scheduleStart": "09:00",
+    "scheduleEnd": "17:00",
+    "dayOfWeek": "Monday"
+  }
+}
+                    </div>
+
+                    <h4>Error Response - Doctor Not Available</h4>
+                    <div class="code-block">
+// 400 - Doctor doesn't work on this day
+{
+  "success": false,
+  "message": "Doctor is not available on Sundays",
+  "data": {
+    "availableSlots": [],
+    "bookedSlots": [],
+    "scheduleStart": null,
+    "scheduleEnd": null
+  }
+}
+
+// 400 - Missing parameters
+{
+  "success": false,
+  "message": "Doctor ID and date are required"
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 How It Works:</strong><br>
+                        1. System determines day of week from the provided date<br>
+                        2. Retrieves doctor's schedule for that day<br>
+                        3. Generates 30-minute interval time slots between start and end time<br>
+                        4. Fetches all non-cancelled appointments for that doctor on that date<br>
+                        5. Returns available slots (excluding booked ones) and booked slots separately
+                    </div>
+
+                    <div class="success-box">
+                        <strong>✅ Use Case:</strong> Perfect for displaying a calendar/time picker UI showing real-time availability to patients before booking.
+                    </div>
+                </div>
+
+                <!-- Get Doctor Schedule -->
+                <h3>GET /doctor/:doctorId/schedule</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/appointments/doctor/:doctorId/schedule</span>
+                    </div>
+                    <p><strong>Description:</strong> Get a doctor's complete weekly schedule (Public endpoint).</p>
+                    
+                    <h4>URL Parameters</h4>
+                    <div class="code-block">
+doctorId: integer (required)
+                    </div>
+
+                    <h4>Example Request</h4>
+                    <div class="code-block">
+GET /api/appointments/doctor/1/schedule
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "doctor": {
+      "id": 1,
+      "name": "Dr. Sarah Johnson",
+      "specialization": "Cardiology"
+    },
+    "schedule": [
+      {
+        "scheduleId": 1,
+        "doctorId": 1,
+        "dayOfWeek": "Monday",
+        "startTime": "09:00:00",
+        "endTime": "17:00:00",
+        "isAvailable": true
+      },
+      {
+        "scheduleId": 2,
+        "doctorId": 1,
+        "dayOfWeek": "Tuesday",
+        "startTime": "09:00:00",
+        "endTime": "13:00:00",
+        "isAvailable": true
+      },
+      {
+        "scheduleId": 3,
+        "doctorId": 1,
+        "dayOfWeek": "Wednesday",
+        "startTime": "13:00:00",
+        "endTime": "18:00:00",
+        "isAvailable": true
+      },
+      {
+        "scheduleId": 4,
+        "doctorId": 1,
+        "dayOfWeek": "Thursday",
+        "startTime": "09:00:00",
+        "endTime": "17:00:00",
+        "isAvailable": true
+      },
+      {
+        "scheduleId": 5,
+        "doctorId": 1,
+        "dayOfWeek": "Friday",
+        "startTime": "09:00:00",
+        "endTime": "15:00:00",
+        "isAvailable": true
+      }
+    ]
+  }
+}
+                    </div>
+
+                    <h4>Error Response</h4>
+                    <div class="code-block">
+// 404 - Doctor not found
+{
+  "success": false,
+  "message": "Doctor not found"
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Sorting:</strong> Schedule is automatically sorted by day of week (Monday to Sunday) and then by start time.
+                    </div>
+                </div>
+
+                <h3>Complete Appointment Booking Flow</h3>
+                <div class="code-block">
+// Step 1: Browse available doctors
+const doctorsResponse = await fetch('/api/doctors');
+const { data: doctors } = await doctorsResponse.json();
+console.log('Available doctors:', doctors);
+
+// Step 2: Select a doctor and view their weekly schedule
+const doctorId = 1;
+const scheduleResponse = await fetch(`/api/appointments/doctor/${doctorId}/schedule`);
+const { data: schedule } = await scheduleResponse.json();
+console.log('Doctor schedule:', schedule);
+
+// Step 3: Check availability for a specific date
+const targetDate = '2025-12-15';
+const availabilityResponse = await fetch(
+  `/api/appointments/availability?doctorId=${doctorId}&date=${targetDate}`
+);
+const { data: availability } = await availabilityResponse.json();
+console.log('Available slots:', availability.availableSlots);
+
+// Step 4: Patient logs in
+const loginResponse = await fetch('/api/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'patient@example.com',
+    password: 'password123'
+  })
+});
+const { token } = await loginResponse.json();
+
+// Step 5: Book an appointment
+const bookingResponse = await fetch('/api/appointments/book', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    doctorId: doctorId,
+    date: targetDate,
+    time: '10:00:00',
+    reasonForVisit: 'Regular checkup'
+  })
+});
+const booking = await bookingResponse.json();
+console.log('Booking result:', booking);
+
+// Step 6: View booked appointments
+const myAppointments = await fetch('/api/patients/appointments', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+                </div>
+
+                <h3>Appointment Booking Validation Diagram</h3>
+                <div class="code-block">
+┌─────────────────────────────────────────────────────────────┐
+│              APPOINTMENT BOOKING VALIDATION                 │
+└─────────────────────────────────────────────────────────────┘
+
+Patient Request → Book Appointment
+         ↓
+   ✓ Is date in future?
+         ↓ Yes
+   ✓ Does doctor work this day?
+         ↓ Yes
+   ✓ Is time within doctor's schedule?
+         ↓ Yes
+   ✓ Is slot available (not booked)?
+         ↓ Yes
+   ✓ Does patient have conflicting appointment?
+         ↓ No
+   ✓ Does patient profile exist?
+         ↓ Yes
+         ↓
+   CREATE APPOINTMENT
+         ↓
+   Set status = 'scheduled'
+         ↓
+   Save to database
+         ↓
+   Return success (201)
+         ↓
+   Send confirmation email (async)
+
+
+If ANY validation fails → Return error (400/404/409)
+                </div>
+
+                <h3>Time Slot Generation Logic</h3>
+                <div class="card">
+                    <h4>How Available Slots Are Generated</h4>
+                    <p>The system generates 30-minute interval slots automatically:</p>
+                    <div class="code-block" style="font-size: 0.85em;">
+Doctor Schedule: Monday 09:00 - 17:00
+
+Generated Slots (30-min intervals):
+09:00, 09:30, 10:00, 10:30, 11:00, 11:30,
+12:00, 12:30, 13:00, 13:30, 14:00, 14:30,
+15:00, 15:30, 16:00, 16:30
+
+Booked Appointments:
+11:30, 12:00, 12:30
+
+Available Slots (Generated - Booked):
+09:00, 09:30, 10:00, 10:30, 11:00, 13:00,
+13:30, 14:00, 14:30, 15:00, 15:30, 16:00, 16:30
+                    </div>
+                </div>
+
+                <h3>Common Booking Scenarios</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>✅ Successful Booking</h4>
+                        <ul>
+                            <li>Date is in the future</li>
+                            <li>Doctor works on selected day</li>
+                            <li>Time is within schedule</li>
+                            <li>Slot is available</li>
+                            <li>No patient conflicts</li>
+                            <li>Patient profile exists</li>
+                        </ul>
+                        <p><strong>Result:</strong> Appointment created with status='scheduled', confirmation email sent</p>
+                    </div>
+
+                    <div class="card">
+                        <h4>❌ Booking Failures</h4>
+                        <ul>
+                            <li><strong>Past Date:</strong> "Cannot book appointments in the past"</li>
+                            <li><strong>Wrong Day:</strong> "Doctor not available on Sundays"</li>
+                            <li><strong>Outside Hours:</strong> "Doctor available 09:00-17:00"</li>
+                            <li><strong>Slot Taken:</strong> "This time slot is already booked"</li>
+                            <li><strong>Patient Conflict:</strong> "You have appointment at this time"</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>📧 Email Notifications</h4>
+                        <p>Automatically sent via Mailjet after successful booking:</p>
+                        <ul>
+                            <li><strong>To:</strong> Patient's email</li>
+                            <li><strong>Subject:</strong> "Appointment Confirmed"</li>
+                            <li><strong>Content:</strong> Doctor name, date, time, reason</li>
+                            <li><strong>Timing:</strong> Asynchronous (non-blocking)</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>🔄 Appointment Status Flow</h4>
+                        <ol>
+                            <li><strong>scheduled:</strong> Initially created</li>
+                            <li><strong>completed:</strong> Doctor marks as done</li>
+                            <li><strong>cancelled:</strong> Patient or doctor cancels</li>
+                            <li><strong>no_show:</strong> Patient doesn't appear</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin APIs Section -->
+            <section id="api-admin">
+                <h2>⚙️ Admin APIs</h2>
+                
+                <h3>Base URL</h3>
+                <div class="endpoint-path">/api/admin</div>
+                
+                <p>These endpoints provide administrative functions for managing the entire system. All endpoints require admin authentication.</p>
+
+                <!-- Get Stats -->
+                <h3>GET /stats</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/admin/stats</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get system-wide statistics for admin dashboard.</p>
+                    <p><strong>Required Role:</strong> Admin</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "totalUsers": 150,
+    "totalDoctors": 25,
+    "totalAppointments": 450
+  }
+}
+                    </div>
+                </div>
+
+                <!-- Add Doctor -->
+                <h3>POST /doctors</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/admin/doctors</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Create a new doctor account with profile.</p>
+                    <p><strong>Required Role:</strong> Admin</p>
+
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "fullName": "Dr. Michael Chen",
+  "email": "michael.chen@clinic.com",
+  "password": "SecurePass123!",
+  "specialization": "Neurology",
+  "consultationFee": 200.00,
+  "bio": "Board-certified neurologist with 15 years experience",
+  "roomNumber": "B-205"
+}
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>fullName</td><td>String</td><td>Yes</td><td>Doctor's full name</td></tr>
+                                <tr><td>email</td><td>String</td><td>Yes</td><td>Unique email address</td></tr>
+                                <tr><td>password</td><td>String</td><td>Yes</td><td>Account password (will be hashed)</td></tr>
+                                <tr><td>specialization</td><td>String</td><td>Yes</td><td>Medical specialization</td></tr>
+                                <tr><td>consultationFee</td><td>Number</td><td>Yes</td><td>Fee amount</td></tr>
+                                <tr><td>bio</td><td>String</td><td>No</td><td>Professional biography</td></tr>
+                                <tr><td>roomNumber</td><td>String</td><td>No</td><td>Office room number</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (201 Created)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Doctor created successfully",
+  "data": {
+    "doctorId": 15,
+    "userId": 42,
+    "fullName": "Dr. Michael Chen",
+    "email": "michael.chen@clinic.com"
+  }
+}
+                    </div>
+
+                    <h4>Error Responses</h4>
+                    <div class="code-block">
+// 400 - Email already exists
+{
+  "success": false,
+  "message": "User with this email already exists"
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Logic:</strong> Creates both User account (role='doctor') and Doctor profile in one transaction. Password is hashed with bcrypt before storage.
+                    </div>
+                </div>
+
+                <!-- Delete Doctor -->
+                <h3>DELETE /doctors/:doctorId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge delete">DELETE</span>
+                        <span class="endpoint-path">/api/admin/doctors/:doctorId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Delete a doctor and their associated user account.</p>
+                    <p><strong>Required Role:</strong> Admin</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Doctor Dr. Michael Chen and associated account deleted successfully"
+}
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Cascade Delete:</strong> Deleting a doctor also removes their schedules and appointments due to database CASCADE constraints.
+                    </div>
+                </div>
+
+                <!-- Get All Patients -->
+                <h3>GET /patients</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/admin/patients</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get list of all patients in the system.</p>
+                    <p><strong>Required Role:</strong> Admin</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": [
+    {
+      "patientId": 10,
+      "userId": 25,
+      "dateOfBirth": "1985-03-15",
+      "gender": "Male",
+      "bloodGroup": "A+",
+      "User": {
+        "userId": 25,
+        "fullName": "John Doe",
+        "email": "john.doe@example.com",
+        "phoneNumber": "+1234567890"
+      }
+    }
+  ]
+}
+                    </div>
+                </div>
+
+                <!-- Delete Patient -->
+                <h3>DELETE /patients/:patientId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge delete">DELETE</span>
+                        <span class="endpoint-path">/api/admin/patients/:patientId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Delete a patient and their associated user account.</p>
+                    <p><strong>Required Role:</strong> Admin</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Patient John Doe and associated account deleted successfully"
+}
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Cascade Delete:</strong> Deleting a patient also removes their appointments and medical records.
+                    </div>
+                </div>
+
+                <h3>Admin Workflow Example</h3>
+                <div class="code-block">
+// 1. Admin logs in
+const loginResponse = await fetch('/api/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'admin@clinic.com',
+    password: 'adminpass'
+  })
+});
+const { token } = await loginResponse.json();
+
+// 2. View system statistics
+const statsResponse = await fetch('/api/admin/stats', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+const stats = await statsResponse.json();
+
+// 3. Add a new doctor
+await fetch('/api/admin/doctors', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    fullName: 'Dr. Emily Watson',
+    email: 'emily.watson@clinic.com',
+    password: 'SecurePass123!',
+    specialization: 'Dermatology',
+    consultationFee: 180.00,
+    bio: 'Specialist in skin conditions',
+    roomNumber: 'C-301'
+  })
+});
+
+// 4. View all patients
+const patientsResponse = await fetch('/api/admin/patients', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+
+// 5. Delete a doctor (if needed)
+await fetch('/api/admin/doctors/5', {
+  method: 'DELETE',
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+                </div>
+            </section>
+
+            <!-- Medical Records APIs Section -->
+            <section id="api-medical">
+                <h2>📁 Medical Records APIs</h2>
+                
+                <h3>Base URL</h3>
+                <div class="endpoint-path">/api/medical-records</div>
+                
+                <p>These endpoints manage patient medical records, histories, diagnoses, and treatments. All endpoints require doctor authentication.</p>
+
+                <!-- Create/Update Medical Record -->
+                <h3>POST /appointment/:appointmentId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge post">POST</span>
+                        <span class="endpoint-path">/api/medical-records/appointment/:appointmentId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Create or update medical record for a completed appointment.</p>
+                    <p><strong>Required Role:</strong> Doctor (must be the doctor assigned to the appointment)</p>
+
+                    <h4>Request Body</h4>
+                    <div class="code-block">
+{
+  "diagnosis": "Acute upper respiratory infection",
+  "prescription": "Amoxicillin 500mg, 3 times daily for 7 days",
+  "treatmentPlan": "Rest, plenty of fluids, follow-up in 1 week if symptoms persist"
+}
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>diagnosis</td><td>String</td><td>Yes</td><td>Medical diagnosis</td></tr>
+                                <tr><td>prescription</td><td>String</td><td>No</td><td>Prescribed medications</td></tr>
+                                <tr><td>treatmentPlan</td><td>String</td><td>No</td><td>Recommended treatment plan</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Success Response (201 Created or 200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Medical record created successfully",
+  "data": {
+    "recordId": 25,
+    "appointmentId": 10,
+    "patientId": 5,
+    "doctorId": 2,
+    "diagnosis": "Acute upper respiratory infection",
+    "prescription": "Amoxicillin 500mg...",
+    "treatmentPlan": "Rest, plenty of fluids...",
+    "recordDate": "2025-12-09T14:30:00.000Z"
+  }
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Logic:</strong> If a medical record already exists for this appointment, it updates the existing record. Otherwise, it creates a new one. Patient ID and Doctor ID are automatically extracted from the appointment.
+                    </div>
+                </div>
+
+                <!-- Get Patient History -->
+                <h3>GET /patient/:patientId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/medical-records/patient/:patientId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get complete medical history for a patient.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "patient": {
+      "patientId": 5,
+      "dateOfBirth": "1990-05-15",
+      "gender": "Male",
+      "bloodGroup": "O+",
+      "User": {
+        "fullName": "John Doe",
+        "email": "john.doe@example.com",
+        "phoneNumber": "+1234567890"
+      }
+    },
+    "records": [
+      {
+        "recordId": 25,
+        "diagnosis": "Acute upper respiratory infection",
+        "prescription": "Amoxicillin 500mg...",
+        "treatmentPlan": "Rest, plenty of fluids...",
+        "recordDate": "2025-12-09",
+        "Appointment": {
+          "appointmentDate": "2025-12-09",
+          "appointmentTime": "14:00:00",
+          "Doctor": {
+            "User": {
+              "fullName": "Dr. Sarah Johnson"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
+                    </div>
+                </div>
+
+                <!-- Get My Patients -->
+                <h3>GET /my-patients</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/medical-records/my-patients</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get all patients that the logged-in doctor has treated.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": [
+    {
+      "patientId": 5,
+      "dateOfBirth": "1990-05-15",
+      "gender": "Male",
+      "bloodGroup": "O+",
+      "User": {
+        "fullName": "John Doe",
+        "email": "john.doe@example.com",
+        "phoneNumber": "+1234567890"
+      },
+      "recordCount": 3,
+      "lastVisit": "2025-12-09"
+    }
+  ]
+}
+                    </div>
+
+                    <div class="info-box">
+                        <strong>🔹 Data Enrichment:</strong> Each patient entry includes recordCount (number of medical records) and lastVisit (most recent appointment date).
+                    </div>
+                </div>
+
+                <!-- Get Record by ID -->
+                <h3>GET /:recordId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge get">GET</span>
+                        <span class="endpoint-path">/api/medical-records/:recordId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Get detailed information for a specific medical record.</p>
+                    <p><strong>Required Role:</strong> Doctor</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "data": {
+    "recordId": 25,
+    "diagnosis": "Acute upper respiratory infection",
+    "prescription": "Amoxicillin 500mg...",
+    "treatmentPlan": "Rest, plenty of fluids...",
+    "recordDate": "2025-12-09",
+    "Appointment": {
+      "appointmentId": 10,
+      "appointmentDate": "2025-12-09",
+      "appointmentTime": "14:00:00",
+      "Patient": {
+        "patientId": 5,
+        "User": {
+          "fullName": "John Doe",
+          "email": "john.doe@example.com",
+          "phoneNumber": "+1234567890"
+        }
+      },
+      "Doctor": {
+        "User": {
+          "fullName": "Dr. Sarah Johnson"
+        }
+      }
+    }
+  }
+}
+                    </div>
+                </div>
+
+                <!-- Update Medical Record -->
+                <h3>PUT /:recordId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge put">PUT</span>
+                        <span class="endpoint-path">/api/medical-records/:recordId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Update an existing medical record.</p>
+                    <p><strong>Required Role:</strong> Doctor (must be the doctor who created the record)</p>
+
+                    <h4>Request Body (All fields optional)</h4>
+                    <div class="code-block">
+{
+  "diagnosis": "Updated diagnosis",
+  "prescription": "Updated prescription",
+  "treatmentPlan": "Updated treatment plan"
+}
+                    </div>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Medical record updated successfully",
+  "data": {
+    "recordId": 25,
+    "diagnosis": "Updated diagnosis",
+    "prescription": "Updated prescription",
+    "treatmentPlan": "Updated treatment plan"
+  }
+}
+                    </div>
+                </div>
+
+                <!-- Delete Medical Record -->
+                <h3>DELETE /:recordId</h3>
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="badge delete">DELETE</span>
+                        <span class="endpoint-path">/api/medical-records/:recordId</span>
+                        <span class="badge protected">🔒 Protected</span>
+                    </div>
+                    <p><strong>Description:</strong> Delete a medical record.</p>
+                    <p><strong>Required Role:</strong> Doctor (must be the doctor who created the record)</p>
+
+                    <h4>Success Response (200 OK)</h4>
+                    <div class="code-block">
+{
+  "success": true,
+  "message": "Medical record deleted successfully"
+}
+                    </div>
+                </div>
+
+                <h3>Medical Records Workflow Example</h3>
+                <div class="code-block">
+// 1. Doctor completes appointment and creates medical record
+const token = localStorage.getItem('token');
+const appointmentId = 10;
+
+await fetch(`/api/medical-records/appointment/${appointmentId}`, {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    diagnosis: 'Hypertension, stage 1',
+    prescription: 'Lisinopril 10mg once daily',
+    treatmentPlan: 'Lifestyle modifications: reduce sodium, exercise 30min daily, follow-up in 2 weeks'
+  })
+});
+
+// 2. View all patients treated by this doctor
+const myPatientsResponse = await fetch('/api/medical-records/my-patients', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+const myPatients = await myPatientsResponse.json();
+
+// 3. View complete medical history for a specific patient
+const patientId = 5;
+const historyResponse = await fetch(`/api/medical-records/patient/${patientId}`, {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+const patientHistory = await historyResponse.json();
+
+// 4. Update a medical record
+const recordId = 25;
+await fetch(`/api/medical-records/${recordId}`, {
+  method: 'PUT',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    diagnosis: 'Hypertension, stage 1 - controlled',
+    prescription: 'Continue Lisinopril 10mg once daily'
+  })
+});
+                </div>
+
+                <h3>Medical Records Use Cases</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Creating Records After Appointments</h4>
+                        <ol>
+                            <li>Doctor marks appointment as 'completed'</li>
+                            <li>Doctor creates medical record linked to appointment</li>
+                            <li>System automatically links patient and doctor</li>
+                            <li>Record is immediately accessible to both parties</li>
+                        </ol>
+                    </div>
+
+                    <div class="card">
+                        <h4>Viewing Patient History</h4>
+                        <ol>
+                            <li>Doctor selects patient from their patient list</li>
+                            <li>System retrieves all medical records for that patient</li>
+                            <li>Records displayed chronologically (newest first)</li>
+                            <li>Each record shows diagnosis, treatment, and prescribing doctor</li>
+                        </ol>
+                    </div>
+
+                    <div class="card">
+                        <h4>Updating Medical Records</h4>
+                        <ul>
+                            <li>Doctor can update records they created</li>
+                            <li>All fields are optional in updates</li>
+                            <li>Updates are logged with timestamp</li>
+                            <li>Only the creating doctor has update access</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>Security & Access Control</h4>
+                        <ul>
+                            <li><strong>Doctors:</strong> Can view/edit records they created</li>
+                            <li><strong>Patients:</strong> Can view their own records (via patient endpoints)</li>
+                            <li><strong>Admin:</strong> Full access to all records</li>
+                            <li><strong>Privacy:</strong> Records linked to appointments ensure proper authorization</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Clinic Management System. All rights reserved.</p>
+    
+    </footer>
+</body>
+</html>

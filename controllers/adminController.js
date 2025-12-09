@@ -122,7 +122,7 @@ exports.addDoctor = async (req, res) => {
 
         // Create Doctor
         const newDoctor = await Doctor.create({
-            user_id: newUser.userId,
+            userId: newUser.userId,
             specialization,
             consultationFee,
             bio,

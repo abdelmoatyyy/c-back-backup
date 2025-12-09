@@ -255,3 +255,104 @@ exports.getAppointments = async (req, res) => {
         });
     }
 };
+
+/**
+ * @swagger
+ * /api/patients/appointments/{appointmentId}/cancel:
+ *   put:
+ *     summary: Cancel a patient's appointment
+ *     tags: [Patients]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: appointmentId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the appointment to cancel
+ *     responses:
+ *       200:
+ *         description: Appointment cancelled successfully
+ *       403:
+ *         description: Not authorized to cancel this appointment
+ *       404:
+ *         description: Appointment not found
+ *       400:
+ *         description: Appointment already cancelled or completed
+ *       500:
+ *         description: Server error
+ */
+exports.cancelAppointment = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { appointmentId } = req.params;
+
+        // Find the patient
+        const patient = await Patient.findOne({
+            where: { user_id: userId }
+        });
+
+        if (!patient) {
+            return res.status(404).json({
+                success: false,
+                message: "Patient profile not found"
+            });
+        }
+
+        // Find the appointment
+        const appointment = await Appointment.findOne({
+            where: { 
+                appointmentId: appointmentId,
+                patientId: patient.patientId
+            },
+            include: [{
+                model: Doctor,
+                include: [{
+                    model: User,
+                    attributes: ['fullName', 'email']
+                }]
+            }]
+        });
+
+        if (!appointment) {
+            return res.status(404).json({
+                success: false,
+                message: "Appointment not found"
+            });
+        }
+
+        // Check if appointment can be cancelled
+        if (appointment.status === 'cancelled') {
+            return res.status(400).json({
+                success: false,
+                message: "Appointment is already cancelled"
+            });
+        }
+
+        if (appointment.status === 'completed') {
+            return res.status(400).json({
+                success: false,
+                message: "Cannot cancel a completed appointment"
+            });
+        }
+
+        // Update appointment status to cancelled
+        appointment.status = 'cancelled';
+        await appointment.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Appointment cancelled successfully",
+            data: appointment
+        });
+
+    } catch (error) {
+        console.error("Error cancelling appointment:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error cancelling appointment",
+            error: error.message
+        });
+    }
+};

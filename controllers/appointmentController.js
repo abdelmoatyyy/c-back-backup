@@ -92,7 +92,7 @@ exports.bookAppointment = async (req, res) => {
             });
         }
 
-        // Check if slot is already booked
+        // Check if slot is already booked with this doctor
         const existingAppointment = await Appointment.findOne({
             where: {
                 doctorId: doctorId,
@@ -121,6 +121,33 @@ exports.bookAppointment = async (req, res) => {
             return res.status(404).json({ 
                 success: false,
                 message: "Patient profile not found for this user" 
+            });
+        }
+
+        // Check if patient already has an appointment at the same time (even with different doctor)
+        const patientConflictingAppointment = await Appointment.findOne({
+            where: {
+                patientId: foundPatient.patientId,
+                appointmentDate: date,
+                appointmentTime: time,
+                status: {
+                    [Op.ne]: 'cancelled' // Ignore cancelled appointments
+                }
+            },
+            include: [{
+                model: Doctor,
+                include: [{
+                    model: User,
+                    attributes: ['fullName']
+                }]
+            }]
+        });
+
+        if (patientConflictingAppointment) {
+            const conflictingDoctorName = patientConflictingAppointment.Doctor?.User?.fullName || 'another doctor';
+            return res.status(409).json({ 
+                success: false,
+                message: `You already have an appointment at ${time} on ${date} with ${conflictingDoctorName}` 
             });
         }
 
