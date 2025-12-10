@@ -598,7 +598,7 @@ exports.getSchedule = async (req, res) => {
         }
 
         const schedule = await Schedule.findAll({
-            where: { doctor_id: doctor.doctorId },
+            where: { doctorId: doctor.doctorId },
             order: [
                 [
                     sequelize.literal(`CASE day_of_week 
@@ -707,7 +707,7 @@ exports.addSchedule = async (req, res) => {
         // Check for overlapping schedules
         const overlapping = await Schedule.findOne({
             where: {
-                doctor_id: doctor.doctorId,
+                doctorId: doctor.doctorId,
                 dayOfWeek: dayOfWeek,
                 [Op.or]: [
                     {
@@ -726,7 +726,7 @@ exports.addSchedule = async (req, res) => {
         }
 
         const schedule = await Schedule.create({
-            doctor_id: doctor.doctorId,
+            doctorId: doctor.doctorId,
             dayOfWeek,
             startTime,
             endTime,
@@ -813,7 +813,7 @@ exports.updateSchedule = async (req, res) => {
         const schedule = await Schedule.findOne({
             where: {
                 scheduleId: scheduleId,
-                doctor_id: doctor.doctorId
+                doctorId: doctor.doctorId
             }
         });
 
@@ -839,7 +839,7 @@ exports.updateSchedule = async (req, res) => {
         const newDayOfWeek = dayOfWeek || schedule.dayOfWeek;
         const overlapping = await Schedule.findOne({
             where: {
-                doctor_id: doctor.doctorId,
+                doctorId: doctor.doctorId,
                 scheduleId: { [Op.ne]: scheduleId },
                 dayOfWeek: newDayOfWeek,
                 [Op.or]: [
@@ -930,7 +930,7 @@ exports.deleteSchedule = async (req, res) => {
         const schedule = await Schedule.findOne({
             where: {
                 scheduleId: scheduleId,
-                doctor_id: doctor.doctorId
+                doctorId: doctor.doctorId
             }
         });
 
